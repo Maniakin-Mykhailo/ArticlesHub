@@ -1,47 +1,36 @@
-﻿@model IEnumerable<ArticlesHub.Models.Article>
+﻿@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@model IEnumerable<ArticlesHub.Models.Article>
+
 
 @{
     ViewData["Title"] = "Index";
 }
 
 
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-@*<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Text)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Author)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Text)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Author)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+@if (SignInManager.IsSignedIn(User))
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
 }
-    </tbody>
-</table>*@
+
+<div class="gallery">
+    @foreach (var item in Model)
+    {
+        <div class="gallery-item bg-primary text-white">
+
+            <h1 class="text-white">@Html.DisplayNameFor(model => model.Title) : @Html.DisplayFor(modelItem => item.Title)</h1>
+            <hr />
+
+           @* <h2>
+                @(item.Text.Length > 50 ? Html.Raw(item.Text.Substring(0, 50) + "...")
+                    : Html.Raw(item.Text))
+            </h2>*@
+
+            <h2 class ="text-white">@Html.DisplayNameFor(modelItem => item.Author) : @Html.DisplayFor(modelItem => item.Author)</h2>
+            <a class="details" asp-action="Details" asp-route-id="@item.Id">Details</a>
+        </div>
+    }
+</div>

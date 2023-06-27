@@ -36,17 +36,80 @@ html, body {
     display: flex;
 }
 
-    .navbar ul li {
-        margin-right: 15px;
-    }
+.navbar ul li {
+margin-right: 15px;
+}
 
-        .navbar ul li a {
-            text-decoration: none;
-            color: #333;
-            font-size: 16px;
-            transition: color 0.3s ease;
-        }
+.navbar ul li a {
+text-decoration: none;
+color: #333;
+font-size: 16px;
+transition: color 0.3s ease;
+}
 
-            .navbar ul li a:hover {
-                color: #666;
-            }
+.navbar ul li a:hover {
+color: #666;
+}
+
+.header{
+    padding: 0;
+    margin: 0;
+}
+.custom-row{
+    margin: 15px;
+}
+
+/* gallery styles */
+
+.article{
+    background-color: red;
+    margin: 10px;
+    
+}
+
+.rounded-box {
+    border: 2px solid #000; /* ������� � ���� ����� */
+    border-radius: 10px; /* ������ ����������� ����� */
+    padding: 20px; /* ������� ������ �������� */
+    margin: 10px;
+    text-align:center;
+}
+
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 ������� */
+    grid-gap: 20px; /* ���������� ����� ������� */
+}
+
+.gallery-item {
+    position: relative;
+    border: 1px solid #000;  
+    border-radius: 20px;  
+    padding: 10%;  
+    margin: 10px;
+    text-align: center;
+    background-color: gray;
+    color: black;
+}
+.details {
+    border: 1px solid rgba(29, 5, 138, 0.39);
+    border-radius: 5px;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    color: white;
+    background-color: rgba(29, 5, 138, 0.39);
+    margin: 0;
+    padding: 5px;
+    text-decoration: none;
+}
+.article-title{
+    text-align:center;
+}
+
+.nav{
+    text-decoration:nonce;
+}
+
+

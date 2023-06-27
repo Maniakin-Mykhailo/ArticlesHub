@@ -52,8 +52,6 @@ namespace ArticlesHub.Controllers
         }
 
         // POST: Articles/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Text,Author")] Article article)
@@ -84,8 +82,6 @@ namespace ArticlesHub.Controllers
         }
 
         // POST: Articles/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Text,Author")] Article article)
