@@ -216,21 +216,34 @@ namespace ArticlesHub.Controllers
         {
             if (_context.Articles == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.Articles'  is null.");
-            }
-            var article = await _context.Articles.FindAsync(id);
-            if (article != null)
-            {
-                _context.Articles.Remove(article);
+                return Problem("Entity set 'ApplicationDbContext.Articles' is null.");
             }
 
+            var article = await _context.Articles
+                .Include(a => a.Images) // Включаем связанные картинки
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (article == null)
+            {
+                return NotFound();
+            }
+
+            // Удаляем все связанные изображения
+            foreach (var image in article.Images)
+            {
+                await DeleteImage(image.Id); // Вызываем метод DeleteImage для удаления каждого изображения
+            }
+
+            // Удаляем статью
+            _context.Articles.Remove(article);
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
         private bool ArticleExists(int id)
         {
-            return (_context.Articles?.Any(e => e.Id == id)).GetValueOrDefault();
+            return _context.Articles.Any(e => e.Id == id);
         }
 
 

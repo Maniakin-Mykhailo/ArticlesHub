@@ -35,7 +35,7 @@
 <h4>Article</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form asp-action="Edit" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
@@ -45,59 +45,46 @@
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Text" class="control-label"></label>
-                <textarea asp-for="Text" class="form-control" id="textArticle"></textarea>
-                <span asp-validation-for="Text" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Author" class="control-label"></label>
                 <input asp-for="Author" class="form-control" />
                 <span asp-validation-for="Author" class="text-danger"></span>
             </div>
-            <h4>Images</h4>
-            <hr />
             <div class="form-group">
-                <label>Upload New Images</label>
-                <input type="file" name="images" multiple class="form-control" />
+                <label asp-for="Text" class="control-label"></label>
+                <textarea asp-for="Text" class="form-control" id="textArticle"></textarea>
+                <span asp-validation-for="Text" class="text-danger"></span>
             </div>
             <hr />
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <label>Addition article images (if needed)</label>
+                <input type="file" name="images" multiple class="form-control"/>
+            </div>
+            <hr />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary"  />
             </div>
         </form>
+    </div>
 
-        <hr />
 
+    <div class="col-md-6">
         <h4>Existing Images</h4>
         <hr />
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Image</th>
-                    <th>Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var image in Model.Images)
-                {
-                    <tr>
-                        <td>
-                            <img src="@Url.Action("GetImage", "Articles", new { id = image.Id })" class="img-thumbnail" alt="Image">
-                        </td>
-                        <td>
-                            <a href="@Url.Action("DeleteImage", "Articles", new { id = image.Id })" class="btn btn-danger">Delete</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-
+        <div class="row">
+            @foreach (var image in Model.Images)
+            {
+                <div class="col-md-6">
+                    <div class="editImg">
+                        <img src="@Url.Action("GetImage", "Articles", new { id = image.Id })" class="img-thumbnail" alt="Image" style="max-width: 100%; max-height: 100%;">
+                    </div>
+                    <a href="@Url.Action("DeleteImage", "Articles", new { id = image.Id })" class="btn btn-danger">Delete</a>
+                </div>
+            }
+        </div>
     </div>
+    
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{

@@ -112,7 +112,12 @@ color: #666;
 }
 
 .nav{
-    text-decoration:nonce;
+    text-decoration:none;
 }
 
+.editImg {
+    max-width: 200px;
+    max-height: 200px;
+    margin-bottom: 10px;
+}
 
