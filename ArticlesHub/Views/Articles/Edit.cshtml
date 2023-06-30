@@ -1,158 +1,47 @@
-﻿@model ArticleViewModel;
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
-@using Microsoft.AspNetCore.Identity;
+﻿@model ArticlesHub.Models.Article
 
 @{
     ViewData["Title"] = "Edit";
 }
-<div>
-    @if (SignInManager.IsSignedIn(User))
-    {
-        <nav class="navbar navbar-expand-lg bg-dark " data-bs-theme="dark">
-            <div class="container-fluid">
-                <div class="collapse navbar-collapse" id="navbarColor01">
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="text-white" asp-action="Create"><i class="bi bi-plus-circle"></i>&nbsp;Create New</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="text-white" asp-action="Delete" asp-route-id="@Model?.Id"><i class="bi bi-trash text-white"></i>&nbsp;Delete</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="text-white" asp-action="Details" asp-route-id="@Model?.Id"><i class="bi bi-backspace-fill text-white"></i>&nbsp;Back to Article</a>
-                        </li>
-                    </ul>
-
-                </div>
-            </div>
-        </nav>
-    }
-</div>
-
-
-
-
 
 <h1>Edit</h1>
 
 <h4>Article</h4>
 <hr />
-
-@using (Html.BeginForm("Edit", "ArticlesController", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    @Html.AntiForgeryToken()
-
-    <div class="form-group">
-        @Html.HiddenFor(model => model.Id)
-        @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label" })
-        @Html.TextBoxFor(model => model.Title, new { @class = "form-control" })
-        @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Text" class="control-label"></label>
+                <textarea asp-for="Text" class="form-control" id="textArticle"></textarea>
+                <span asp-validation-for="Text" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Author" class="control-label"></label>
+                <input asp-for="Author" class="form-control" />
+                <span asp-validation-for="Author" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
     </div>
+</div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Text, htmlAttributes: new { @class = "control-label" })
-        @Html.TextAreaFor(model => model.Text, new { @class = "form-control" })
-        @Html.ValidationMessageFor(model => model.Text, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Author, htmlAttributes: new { @class = "control-label" })
-        @Html.TextBoxFor(model => model.Author, new { @class = "form-control" })
-        @Html.ValidationMessageFor(model => model.Author, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="form-group">
-        <h4>Images</h4>
-        <hr />
-
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Image</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model.Images != null && Model.Images.Count > 0)
-                {
-                    foreach (var image in Model.Images)
-                    {
-                        <tr>
-                            <td>
-                                <img src="~/uploads/@image.FileName" alt="Image" width="100" height="100">
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-danger" onclick="removeImage('@image.Id')">Delete</button>
-                            </td>
-                        </tr>
-                    }
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="2">No images found.</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-
-        <div class="text-center">
-            <button type="button" class="btn btn-primary" onclick="addNewImage()">Add Image</button>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <input type="submit" value="Save" class="btn btn-primary" />
-    </div>
-}
-
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
-        <script>
-            function removeImage(imageId) {
-                if (confirm("Are you sure you want to delete this image?")) {
-                    var removeImages = document.getElementById("RemoveImages");
-                    var input = document.createElement("input");
-                    input.setAttribute("type", "hidden");
-                    input.setAttribute("name", "RemoveImages");
-                    input.setAttribute("value", imageId);
-                    removeImages.appendChild(input);
-                    var row = event.target.parentNode.parentNode;
-                    row.parentNode.removeChild(row);
-                }
-            }
-
-            function addNewImage() {
-                // Add your logic for adding a new image here
-                console.log("Add new image");
-            }
-        </script>
     }
     <script src="~/js/tinymce.js"></script>
-    <script src="~/js/delete.js"></script>
 }
-@*
-@section Scripts {
-    <script>
-        function removeImage(imageId) {
-            if (confirm("Are you sure you want to delete this image?")) {
-                var removeImages = document.getElementById("RemoveImages");
-                var input = document.createElement("input");
-                input.setAttribute("type", "hidden");
-                input.setAttribute("name", "RemoveImages");
-                input.setAttribute("value", imageId);
-                removeImages.appendChild(input);
-                var row = event.target.parentNode.parentNode;
-                row.parentNode.removeChild(row);
-            }
-        }
-
-        function addNewImage() {
-            // Add your logic for adding a new image here
-            console.log("Add new image");
-        }
-    </script>
-}*@

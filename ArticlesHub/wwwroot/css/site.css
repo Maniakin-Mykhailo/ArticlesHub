@@ -15,7 +15,6 @@ html, body {
 
 .main {
     flex: 1 1 auto;
-     word-wrap: break-word;
 }
 
 /* Navbar styles */
@@ -95,12 +94,12 @@ color: #666;
 }
 .details {
     border: 1px solid rgba(29, 5, 138, 0.39);
-    border-radius: 25px;
+    border-radius: 5px;
     position: absolute;
     bottom: 10px;
     right: 10px;
-    color: black;
-    background-color: white;
+    color: white;
+    background-color: rgba(29, 5, 138, 0.39);
     margin: 0;
     padding: 5px;
     text-decoration: none;
@@ -112,25 +111,5 @@ color: #666;
 .nav{
     text-decoration:nonce;
 }
-
-
-.image-gallery {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.image-gallery-item {
-    width: 33%;
-    padding: 10px;
-    box-sizing: border-box;
-    border: 1px solid #000;
-    margin-bottom: 10px;
-}
-
-    .image-gallery-item img {
-        max-width: 100%;
-        height: auto;
-    }
 
 
