@@ -3,6 +3,7 @@ using ArticlesHub.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 
 namespace ArticlesHub.Controllers
 {
@@ -111,6 +112,15 @@ namespace ArticlesHub.Controllers
             {
                 return NotFound();
             }
+
+            // Получение связанных изображений статьи
+            article.Images = await _context.Images.Where(i => i.ArticleId == id).ToListAsync();
+
+            if (article.Images == null)
+            {
+                article.Images = new List<Image>(); // Инициализация свойства Images
+            }
+
             return View(article);
         }
 
@@ -118,7 +128,7 @@ namespace ArticlesHub.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Text,Author")] Article article)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Text,Author")] Article article, List<IFormFile> images)
         {
             if (id != article.Id)
             {
@@ -131,6 +141,36 @@ namespace ArticlesHub.Controllers
                 {
                     _context.Update(article);
                     await _context.SaveChangesAsync();
+
+                    // Обработка загруженных изображений
+                    foreach (var imageFile in images)
+                    {
+                        if (imageFile != null && imageFile.Length > 0)
+                        {
+                            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+                            var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", fileName);
+
+                            using (var stream = new FileStream(imagePath, FileMode.Create))
+                            {
+                                await imageFile.CopyToAsync(stream);
+                            }
+
+                            var image = new Image
+                            {
+                                FileName = fileName,
+                                FilePath = "/images/" + fileName,
+                                ArticleId = article.Id
+                            };
+
+                            _context.Images.Add(image);
+                        }
+                    }
+
+                    await _context.SaveChangesAsync();
+
+                    // Загрузка связанных изображений в свойство Images статьи
+                    article.Images = await _context.Images.Where(i => i.ArticleId == article.Id).ToListAsync();
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -147,6 +187,7 @@ namespace ArticlesHub.Controllers
             }
             return View(article);
         }
+
 
         // GET: Articles/Delete/5
         [Authorize]
@@ -196,18 +237,27 @@ namespace ArticlesHub.Controllers
 
 
         [Authorize]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpGet]
         public async Task<IActionResult> DeleteImage(int id)
         {
             var image = await _context.Images.FindAsync(id);
             if (image != null)
             {
+                // Удаление изображения из базы данных
                 _context.Images.Remove(image);
                 await _context.SaveChangesAsync();
+
+                // Удаление файла изображения с сервера
+                string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", image.FileName);
+                if (System.IO.File.Exists(imagePath))
+                {
+                    System.IO.File.Delete(imagePath);
+                }
+
+                return RedirectToAction(nameof(Edit), new { id = image.ArticleId }); // Перенаправляем обратно на страницу редактирования статьи
             }
 
-            return RedirectToAction(nameof(Edit), new { id = image.ArticleId });
+            return NotFound();
         }
 
         [AllowAnonymous]
