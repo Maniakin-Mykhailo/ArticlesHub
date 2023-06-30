@@ -1,31 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using ArticlesHub.Data;
+﻿using ArticlesHub.Data;
 using ArticlesHub.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ArticlesHub.Controllers
 {
     public class ArticlesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ArticlesController(ApplicationDbContext context)
+        public ArticlesController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: Articles
         public async Task<IActionResult> Index()
         {
-              return _context.Articles != null ? 
-                          View(await _context.Articles.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Articles'  is null.");
+            return _context.Articles != null ?
+                        View(await _context.Articles.ToListAsync()) :
+                        Problem("Entity set 'ApplicationDbContext.Articles'  is null.");
         }
 
         // GET: Articles/Details/5
@@ -36,8 +33,9 @@ namespace ArticlesHub.Controllers
                 return NotFound();
             }
 
-            var article = await _context.Articles
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var article = await _context.Articles.Include(a => a.Images)
+                                                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (article == null)
             {
                 return NotFound();
@@ -53,18 +51,49 @@ namespace ArticlesHub.Controllers
             return View();
         }
 
+
         // POST: Articles/Create
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Text,Author")] Article article)
+        public async Task<IActionResult> Create([Bind("Id,Title,Text,Author")] Article article, List<IFormFile> images)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(article);
                 await _context.SaveChangesAsync();
+
+                foreach (var imageFile in images)
+                {
+                    if (imageFile != null && imageFile.Length > 0)
+                    {
+                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+                        var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", fileName);
+
+                        using (var stream = new FileStream(imagePath, FileMode.Create))
+                        {
+                            await imageFile.CopyToAsync(stream);
+                        }
+
+                        var image = new Image
+                        {
+                            FileName = fileName,
+                            FilePath = "/images/" + fileName,
+                            ArticleId = article.Id
+                        };
+
+                        _context.Images.Add(image);
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+
+                // Загрузка связанных изображений в свойство Images статьи
+                article.Images = _context.Images.Where(i => i.ArticleId == article.Id).ToList();
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(article);
         }
 
@@ -153,14 +182,45 @@ namespace ArticlesHub.Controllers
             {
                 _context.Articles.Remove(article);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ArticleExists(int id)
         {
-          return (_context.Articles?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Articles?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+
+
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteImage(int id)
+        {
+            var image = await _context.Images.FindAsync(id);
+            if (image != null)
+            {
+                _context.Images.Remove(image);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Edit), new { id = image.ArticleId });
+        }
+
+        [AllowAnonymous]
+        public IActionResult GetImage(int id)
+        {
+            var image = _context.Images.FirstOrDefault(i => i.Id == id);
+            if (image != null)
+            {
+                var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", image.FileName);
+                return PhysicalFile(imagePath, "image/jpeg");
+            }
+
+            return NotFound();
         }
     }
 }

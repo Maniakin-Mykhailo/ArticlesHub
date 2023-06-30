@@ -11,5 +11,6 @@ namespace ArticlesHub.Data
         }
 
         public DbSet<Article> Articles { get; set; }
+        public DbSet<Image> Images { get; set; }
     }
 }
