@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ArticlesHub.Data;
 using ArticlesHub.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ArticlesHub.Controllers
 {
@@ -46,12 +47,14 @@ namespace ArticlesHub.Controllers
         }
 
         // GET: Articles/Create
+        [Authorize]
         public IActionResult Create()
         {
             return View();
         }
 
         // POST: Articles/Create
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Text,Author")] Article article)
@@ -66,6 +69,7 @@ namespace ArticlesHub.Controllers
         }
 
         // GET: Articles/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Articles == null)
@@ -82,6 +86,7 @@ namespace ArticlesHub.Controllers
         }
 
         // POST: Articles/Edit/5
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Text,Author")] Article article)
@@ -115,6 +120,7 @@ namespace ArticlesHub.Controllers
         }
 
         // GET: Articles/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Articles == null)
@@ -133,6 +139,7 @@ namespace ArticlesHub.Controllers
         }
 
         // POST: Articles/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

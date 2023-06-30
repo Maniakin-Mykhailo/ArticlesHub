@@ -8,35 +8,32 @@
 }
 
 <div>
-@*    @if (SignInManager.IsSignedIn(User))
-    {*@
+    @if (SignInManager.IsSignedIn(User))
+    {
     <nav class="navbar navbar-expand-lg bg-dark " data-bs-theme="dark">
         <div class="container-fluid">
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="text-white" asp-action="Create">Create New</a>
+                            <a class="text-white" asp-action="Create">&nbsp;Create New</a>
                     </li>
                     <li class="nav-item">
-                        <a class="text-white" asp-action="Edit" asp-route-id="@Model?.Id"><i class="bi bi-pencil text-white"></i>Edit</a>
+                            <a class="text-white" asp-action="Edit" asp-route-id="@Model?.Id"><i class="bi bi-pencil text-white"></i>&nbsp;Edit</a>
                     </li>
                     <li class="nav-item">
-                        <a class="text-white" asp-action="Delete" asp-route-id="@Model?.Id"><i class="bi bi-trash text-white"></i>Delete</a>
+                            <a class="text-white" asp-action="Delete" asp-route-id="@Model?.Id"><i class="bi bi-trash text-white"></i>&nbsp;Delete</a>
                     </li>
                     <li class="nav-item">
-                        <a class="text-white" asp-action="Index"><i class="bi bi-backspace-fill text-white"></i>Back</a>
+                        <a class="text-white" asp-action="Index"><i class="bi bi-backspace-fill text-white"></i>&nbsp;Back</a>
                     </li>
                 </ul>
                 
             </div>
         </div>
-    </nav>
-
-   
-        
-    @*}*@
-
+    </nav>  
+    }
 </div>
+
 <div class="details-body custom-row">
     <div class="details-title">
         <div class="article-title"><h1>@Html.DisplayNameFor(model => model.Title) : @Html.DisplayFor(model => model.Title) </h1></div>
