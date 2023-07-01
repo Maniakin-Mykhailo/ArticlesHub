@@ -4,6 +4,11 @@
     toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
     tinycomments_mode: 'embedded',
     tinycomments_author: 'Author name',
+    a11y_advanced_options: true,
+    block_unsupported_drop: true,
+    image_title: true,
+    images_file_types: 'jpg,jpeg,webp',
+    file_picker_types: 'image',
     mergetags_list: [
         { value: 'First.Name', title: 'First Name' },
         { value: 'Email', title: 'Email' },
