@@ -26,17 +26,20 @@
                             </li>
                         </ul>
                     </div>
+                    <partial name="_LoginPartial"></partial>
                 </div>
-                <partial name="_LoginPartial"></partial>
+                
             </nav>
         </header>
-            <main class="main">
-                @RenderBody()
-            </main>
-        <footer class="footer">
-            &copy; 2023 - ArticlesHub - <a class="link-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
 
+        <main class="main">
+            @RenderBody()
+        </main>
+
+        <footer class="footer bg-black text-white footer-centered">
+            &copy; 2000 - 2023  ArticlesHub - <a class="link-light" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </footer>
+
     </div>
     <script src="https://cdn.tiny.cloud/1/lz3v8uclpc3zy0oah4k2dpatnqohyhqtg43e8zdch4nh6bwy/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

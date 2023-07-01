@@ -33,37 +33,46 @@
     }
 </div>
 
-<div class="details-body custom-row">
-    <div class="details-title">
-        <div class="article-title">
-            <h1>@Html.DisplayNameFor(model => model.Title) : @Html.DisplayFor(model => model.Title)</h1>
-        </div>
-        <div class="article-title">
-            <h2>@Html.DisplayNameFor(model => model.Author) : @Html.DisplayFor(model => model.Author)</h2>
-        </div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12"
+            <div class="details-body custom-row">
+                <div class="details-title">
+                    <div class="article-title">
+                        <h1>@Html.DisplayNameFor(model => model.Title) : @Html.DisplayFor(model => model.Title)</h1>
+                    </div>
+                    <div class="article-title">
+                        <h2>@Html.DisplayNameFor(model => model.Author) : @Html.DisplayFor(model => model.Author)</h2>
+                    </div>
 
-        <hr />
-    </div>
-    <div class="details-text">
-        @Html.Raw(Model.Text)
-    </div>
-    @if (Model.Images != null && Model.Images.Count > 0)
-    {
-        <h3>Additional article images</h3>
-        <hr/>
-        <div class="row">
-            @foreach (var image in Model.Images)
-            {
-                <div class="col-md-2 col-sm-4 col-6">
-                    <a href="@Url.Action("GetImage", "Articles", new { id = image.Id })" target="_blank">
-                        <img src="@Url.Action("GetImage", "Articles", new { id = image.Id })" alt="@image.FileName" class="img-thumbnail img-fluid" />
-                    </a>
+                    <hr />
                 </div>
-            }
-        </div>
-    }
+                <div class="details-text">
+                    @Html.Raw(Model.Text)
+                </div>
+                @if (Model.Images != null && Model.Images.Count > 0)
+                {
+                    <h3>Additional article images</h3>
+                    <hr/>
+                    <div class="row">
+                        @foreach (var image in Model.Images)
+                        {
+                            <div class="col-md-2 col-sm-4 col-6">
+                                <a href="@Url.Action("GetImage", "Articles", new { id = image.Id })" target="_blank">
+                                    <img src="@Url.Action("GetImage", "Articles", new { id = image.Id })" alt="@image.FileName" class="img-thumbnail img-fluid" />
+                                </a>
+                            </div>
+                        }
+                    </div>
+                }
 
+            </div>
+        </div>
+    </div>
 </div>
+
+
+
 @section scripts {
     <script src="~/js/fullimage.js"></script>
 }

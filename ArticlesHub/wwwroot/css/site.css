@@ -3,9 +3,7 @@ html, body {
     margin: 0;
     padding: 0;
 }
-.col-md-4 {
-    overflow-x: hidden; /* Скрывает горизонтальную прокрутку */
-}
+
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
@@ -58,9 +56,6 @@ color: #666;
     padding: 0;
     margin: 0;
 }
-.custom-row{
-    margin: 15px;
-}
 
 /* gallery styles */
 
@@ -71,9 +66,9 @@ color: #666;
 }
 
 .rounded-box {
-    border: 2px solid #000; /* ������� � ���� ����� */
-    border-radius: 10px; /* ������ ����������� ����� */
-    padding: 20px; /* ������� ������ �������� */
+    border: 2px solid #000; 
+    border-radius: 10px; 
+    padding: 20px; 
     margin: 10px;
     text-align:center;
 }
@@ -81,8 +76,8 @@ color: #666;
 
 .gallery {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 ������� */
-    grid-gap: 20px; /* ���������� ����� ������� */
+    grid-template-columns: repeat(4, 1fr); 
+    grid-gap: 20px; 
 }
 
 .gallery-item {
@@ -96,13 +91,11 @@ color: #666;
     color: black;
 }
 .details {
-    border: 1px solid rgba(29, 5, 138, 0.39);
-    border-radius: 5px;
+   
     position: absolute;
     bottom: 10px;
     right: 10px;
     color: white;
-    background-color: rgba(29, 5, 138, 0.39);
     margin: 0;
     padding: 5px;
     text-decoration: none;
@@ -119,5 +112,15 @@ color: #666;
     max-width: 200px;
     max-height: 200px;
     margin-bottom: 10px;
+}
+.footer-centered {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+.centered-btn {
+    display: flex;
+    justify-content: center;
+    margin: 10px;
 }
 
