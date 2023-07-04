@@ -183,7 +183,11 @@ namespace ArticlesHub.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                // Получение URL предыдущей страницы
+                string referer = Request.Headers["Referer"].ToString();
+
+                // Переадресация на предыдущую страницу
+                return Redirect(referer);
             }
             return View(article);
         }
@@ -271,6 +275,40 @@ namespace ArticlesHub.Controllers
             }
 
             return NotFound();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteAllImages(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var article = await _context.Articles.FindAsync(id);
+            if (article == null)
+            {
+                return NotFound();
+            }
+
+            // Удаление всех изображений связанных со статьей
+            var images = await _context.Images.Where(i => i.ArticleId == id).ToListAsync();
+            foreach (var image in images)
+            {
+                // Удаление файла изображения с сервера
+                string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", image.FileName);
+                if (System.IO.File.Exists(imagePath))
+                {
+                    System.IO.File.Delete(imagePath);
+                }
+
+                _context.Images.Remove(image);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Edit", new { id });
         }
 
         [AllowAnonymous]
