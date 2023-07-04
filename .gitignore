@@ -362,3 +362,6 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /ArticlesHub/wwwroot/images/b5871aed-99dc-4755-b9b8-15a14a164bce.png
+/ArticlesHub/.gitignore
+/.gitignore
+/.gitignore
