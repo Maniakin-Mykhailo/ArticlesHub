@@ -89,7 +89,7 @@ namespace ArticlesHub.Controllers
 
                 await _context.SaveChangesAsync();
 
-                // Загрузка связанных изображений в свойство Images статьи
+                // Load related images into the Images property of the article
                 article.Images = _context.Images.Where(i => i.ArticleId == article.Id).ToList();
 
                 return RedirectToAction(nameof(Index));
@@ -113,12 +113,12 @@ namespace ArticlesHub.Controllers
                 return NotFound();
             }
 
-            // Получение связанных изображений статьи
+            // Retrieving linked images of an article
             article.Images = await _context.Images.Where(i => i.ArticleId == id).ToListAsync();
 
             if (article.Images == null)
             {
-                article.Images = new List<Image>(); // Инициализация свойства Images
+                article.Images = new List<Image>();
             }
 
             return View(article);
@@ -142,7 +142,7 @@ namespace ArticlesHub.Controllers
                     _context.Update(article);
                     await _context.SaveChangesAsync();
 
-                    // Обработка загруженных изображений
+                    // Processing of uploaded images
                     foreach (var imageFile in images)
                     {
                         if (imageFile != null && imageFile.Length > 0)
@@ -168,7 +168,7 @@ namespace ArticlesHub.Controllers
 
                     await _context.SaveChangesAsync();
 
-                    // Загрузка связанных изображений в свойство Images статьи
+                    // Load related images into the Images property of the article
                     article.Images = await _context.Images.Where(i => i.ArticleId == article.Id).ToListAsync();
 
                 }
@@ -183,10 +183,10 @@ namespace ArticlesHub.Controllers
                         throw;
                     }
                 }
-                // Получение URL предыдущей страницы
+                // Retrieving URL of the previous page
                 string referer = Request.Headers["Referer"].ToString();
 
-                // Переадресация на предыдущую страницу
+                
                 return Redirect(referer);
             }
             return View(article);
@@ -224,7 +224,8 @@ namespace ArticlesHub.Controllers
             }
 
             var article = await _context.Articles
-                .Include(a => a.Images) // Включаем связанные картинки
+                //Include linked pictures
+                .Include(a => a.Images) 
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (article == null)
@@ -232,10 +233,11 @@ namespace ArticlesHub.Controllers
                 return NotFound();
             }
 
-            // Удаляем все связанные изображения
+            // Delete all linked images
             foreach (var image in article.Images)
             {
-                await DeleteImage(image.Id); // Вызываем метод DeleteImage для удаления каждого изображения
+                // Call the DeleteImage method to delete each image
+                await DeleteImage(image.Id); 
             }
 
             // Удаляем статью
@@ -260,18 +262,19 @@ namespace ArticlesHub.Controllers
             var image = await _context.Images.FindAsync(id);
             if (image != null)
             {
-                // Удаление изображения из базы данных
+                // Deleting an image from the database
                 _context.Images.Remove(image);
                 await _context.SaveChangesAsync();
 
-                // Удаление файла изображения с сервера
+                // Deleting an image file from the server
                 string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", image.FileName);
                 if (System.IO.File.Exists(imagePath))
                 {
                     System.IO.File.Delete(imagePath);
                 }
 
-                return RedirectToAction(nameof(Edit), new { id = image.ArticleId }); // Перенаправляем обратно на страницу редактирования статьи
+                // Redirect back to the article editing page
+                return RedirectToAction(nameof(Edit), new { id = image.ArticleId }); 
             }
 
             return NotFound();
@@ -292,11 +295,11 @@ namespace ArticlesHub.Controllers
                 return NotFound();
             }
 
-            // Удаление всех изображений связанных со статьей
+            // Delete all images associated with the article
             var images = await _context.Images.Where(i => i.ArticleId == id).ToListAsync();
             foreach (var image in images)
             {
-                // Удаление файла изображения с сервера
+                // Deleting the image file from the server
                 string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", image.FileName);
                 if (System.IO.File.Exists(imagePath))
                 {
